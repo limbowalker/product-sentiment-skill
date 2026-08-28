@@ -1,5 +1,5 @@
 ---
-name: product-sentiment-tracker
+name: product-sentiment-skill
 description: Run a scheduled customer-sentiment report that scans social media and review sources for product bugs, feature requests, and complaints, then outputs prioritized, deduplicated, reference-validated tickets ready to bulk copy-paste into Buganizer or Jira. Use when the user says "run sentiment report", "scan reviews", "customer sentiment", "find bugs/complaints", "check product feedback", "buganizer tickets", or asks to monitor what users are saying about a product.
 ---
 

@@ -9,7 +9,7 @@ opencode can run a single prompt non-interactively. The prompt just needs to
 trigger this skill:
 
 ```bash
-opencode run "Run the product sentiment report using the product-sentiment-tracker skill. Follow its full run procedure and write both output artifacts."
+opencode run "Run the product sentiment report using the product-sentiment-skill skill. Follow its full run procedure and write both output artifacts."
 ```
 
 Verify the exact headless flag for your opencode version with `opencode --help`
@@ -43,5 +43,5 @@ Logs go to `scheduling/run.out.log` and `scheduling/run.err.log`.
 ## Alternative: cron
 
 ```cron
-0 9 * * * cd ~/path/to/product-sentiment-tracker && /absolute/path/to/opencode run "Run the product sentiment report using the product-sentiment-tracker skill." >> scheduling/run.out.log 2>&1
+0 9 * * * cd ~/path/to/product-sentiment-skill && /absolute/path/to/opencode run "Run the product sentiment report using the product-sentiment-skill skill." >> scheduling/run.out.log 2>&1
 ```

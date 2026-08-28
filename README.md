@@ -34,11 +34,10 @@ Antigravity, Claude, etc.), just copy the prompt below and hand it to your
 favorite agent — it'll clone and install the skill for you. 🪄
 
 ```
-Install the agent skill from https://github.com/example/product-sentiment-tracker
+Install the agent skill from https://github.com/limbowalker/product-sentiment-skill
 into my agent's skills directory, following that repo's instructions.
 ```
 
-> ⚠️ Repo link is a placeholder — swap in the real repository URL.
 
 ## ⚙️ Configure
 
@@ -62,7 +61,7 @@ tweak behavior without touching the skill itself:
 Trigger it from your agent with a prompt like:
 
 ```
-Run the product sentiment report using the product-sentiment-tracker skill.
+Run the product sentiment report using the product-sentiment-skill skill.
 ```
 
 📂 Output lands in a per-run folder: `output/<YYYY-MM-DD>/`.
@@ -71,4 +70,4 @@ Run the product sentiment report using the product-sentiment-tracker skill.
 
 Want it running on autopilot? For macOS `launchd` or `cron`, see
 `scheduling/README.md`. Just edit the paths in the provided config to point at
-wherever you installed the skill (e.g. `~/path/to/product-sentiment-tracker`).
+wherever you installed the skill (e.g. `~/path/to/product-sentiment-skill`).
