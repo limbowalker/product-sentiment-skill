@@ -1,4 +1,4 @@
-# 📡 Product Sentiment Tracker
+# 📡 Product Sentiment Skill
 👤 **Author:** <a href="https://ux.benshishko.eu/" target="_blank" rel="noopener">Ben Shishko</a>
 
 
@@ -30,9 +30,7 @@ Plus the smart bits under the hood:
 
 ## 🚀 Install
 
-This is an agent skill. Rather than list steps for every agent (opencode,
-Antigravity, Claude, etc.), just copy the prompt below and hand it to your
-favorite agent — it'll clone and install the skill for you. 🪄
+This is an agent skill. Works best with locally run agents like Google Antigravity, Claude Code, OpenCode, and similar agents that support custom skills.
 
 ```
 Install the agent skill from https://github.com/limbowalker/product-sentiment-skill
@@ -45,10 +43,11 @@ into my agent's skills directory, following that repo's instructions.
 The skill reads three plain-text preference files (in `preferences/`) so you can
 tweak behavior without touching the skill itself:
 
-- 🏷️ `preferences/products.md` — the product name(s) to track.
-- 🌐 `preferences/sources.md` — the URLs to scan (empty? it falls back to an
-  automatic web search).
-- 📝 `preferences/bug-template.md` — the output format for a single ticket.
+| File | What it does |
+| --- | --- |
+| 🏷️ `preferences/products.md` | The product name(s) to track. |
+| 🌐 `preferences/sources.md` | The URLs to scan. Empty? It falls back to an automatic web search. |
+| 📝 `preferences/bug-template.md` | The output format for a single ticket. |
 
 > 🔒 **Your `preferences/` stay private.** The whole `preferences/` directory is
 > git-ignored, so your product names and source URLs are never committed. The
