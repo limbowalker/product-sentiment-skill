@@ -1,0 +1,23 @@
+# Generated reports and run artifacts
+output/*
+!output/README.md
+
+# Playwright MCP runtime logs, screenshots, snapshots
+.playwright-mcp/
+
+# Runtime memory/state
+memory/
+
+# Private preferences — keep local, never commit.
+# Templates with the SAME filenames live in templates/ (committed) so the AI
+# needs no extra logic; a first-run setup copies templates/ -> preferences/.
+preferences/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

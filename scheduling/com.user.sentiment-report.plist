@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.user.sentiment-report</string>
+
+    <!-- Replace /absolute/path/to/opencode with the output of `which opencode` -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/absolute/path/to/opencode</string>
+        <string>run</string>
+        <string>Run the product sentiment report using the product-sentiment-tracker skill. Follow its full run procedure and write both output artifacts.</string>
+    </array>
+
+    <!-- So relative skill paths (preferences/, memory/, output/) resolve.
+         Replace with the absolute path to where you installed the skill. -->
+    <key>WorkingDirectory</key>
+    <string>/path/to/product-sentiment-tracker</string>
+
+    <!-- Daily at 09:00. Adjust as needed. -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>9</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/path/to/product-sentiment-tracker/scheduling/run.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/path/to/product-sentiment-tracker/scheduling/run.err.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>
