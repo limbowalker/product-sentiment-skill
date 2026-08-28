@@ -1,4 +1,6 @@
 # 📡 Product Sentiment Tracker
+👤 **Author:** <a href="https://ux.benshishko.eu/" target="_blank" rel="noopener">Ben Shishko</a>
+
 
 > Turn the internet's noise about your product into a tidy stack of tickets. 🎯
 
@@ -11,9 +13,9 @@ tickets ready to bulk copy-paste into Buganizer or Jira.
 
 Every run produces two artifacts:
 
-- 📊 **`report.md`** — a concise, shareable brief (totals by type/priority, top
+- **`report.md`** — a concise, shareable brief (totals by type/priority, top
   issues, recurring items, sentiment trend, validation summary).
-- 🎫 **`tickets.md`** — copy-paste-ready tickets, one per atomic issue, following
+- **`tickets.md`** — copy-paste-ready tickets, one per atomic issue, following
   *your own* bug template.
 
 Plus the smart bits under the hood:
@@ -25,7 +27,6 @@ Plus the smart bits under the hood:
 - 📸 **Pin-point screenshots** — when a source has no permalink, it captures a
   highlighted screenshot of the exact review.
 
-👤 **Author:** Ben Shishko
 
 ## 🚀 Install
 
