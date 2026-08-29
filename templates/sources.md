@@ -6,8 +6,15 @@ of URLs the AI will search/scan for product feedback.
 The AI figures out the rest per URL (how to search it, how to build deep links,
 whether it needs a browser) — you don't configure any of that here.
 
-If you leave the list empty, the AI falls back to an automatic Google web search
-for your product(s) and uses the top results as sources (noted in the report).
+The AI reads these pages in a real browser (they're JavaScript-rendered and/or
+login-walled — a plain fetch won't work), so a browser is required to run this
+skill against real sources.
+
+If you leave the list COMPLETELY empty, and only then, the AI falls back to an
+automatic Google web search for your product(s) and uses the top results as
+sources (noted in the report). As long as you list any URL here, the AI scans
+exactly those in the browser and never silently swaps in a web search — an
+unreachable source is reported as a source failure instead.
 
 Tips (optional):
 

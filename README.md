@@ -47,7 +47,7 @@ tweak behavior without touching the skill itself:
 | --- | --- |
 | 🏷️ `preferences/products.md` | The product name(s) to track. |
 | 🌐 `preferences/sources.md` | The URLs to scan. Empty? It falls back to an automatic web search. |
-| 📝 `preferences/bug-template.md` | The output format for a single ticket. |
+| 📝 `preferences/bug-template.md` | The output format for a single ticket you then may want to copy into your Buganizer, Jira or Asana. |
 
 > 🔒 **Your `preferences/` stay private.** The whole `preferences/` directory is
 > git-ignored, so your product names and source URLs are never committed. The

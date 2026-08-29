@@ -13,6 +13,36 @@ copy-paste-ready ticket file.
 The ultimate goal: **surface and file real product issues fast, so the team
 fixes them before more users complain publicly.**
 
+## ⚠️ Browser use is REQUIRED — read this first
+
+**This skill runs in a real browser. It is not a plain-HTTP scraper.** The
+sources that matter (marketplace/app-store review tabs, Reddit, X, forums, issue
+trackers) are JavaScript-rendered and/or login-walled. A plain `webfetch` returns
+an empty shell, a login wall, or a CAPTCHA for these — **that is expected and is
+NOT a reason to give up on the source.**
+
+Non-negotiable rules:
+
+- **You MUST use the Playwright browser tools (`browser_navigate`,
+  `browser_snapshot`, `browser_evaluate`, `browser_take_screenshot`, etc.) to read
+  the configured sources.** `webfetch` is only a fast first probe for plain static
+  pages; for anything JS-heavy or social you go straight to the browser.
+- **An empty/partial/login-walled `webfetch` result MUST trigger the browser, not
+  the Google fallback.** Escalate: `webfetch` → browser → (login flow if walled) →
+  graceful source failure. Never skip the browser step.
+- **The Google web-search fallback is ONLY for when the user configured zero
+  sources.** If `sources.md` contains any URL, the fallback is forbidden. A
+  configured source that can't be read is a *source failure you report*, never a
+  silent swap to Google search.
+- **If no browser tool is available in this environment, STOP and say so.** Do not
+  quietly substitute Google web search for the configured sources and present it as
+  a completed run. Report that the browser is unavailable and that configured
+  sources could not be scanned.
+
+If you find yourself about to "fall back to Google web search" while
+`sources.md` has URLs in it, you are doing the wrong thing — open the browser
+instead.
+
 ## Files this skill uses
 
 Paths are relative to this skill's base directory.
@@ -157,16 +187,18 @@ Execute these steps in order. Do not skip the validation step (step 8).
    `preferences/bug-template.md`. Extract the product name(s) and the source URLs
    from their bullet lists (ignore prose/tips; skip `NOTES-START`…`NOTES-END`
    human-only blocks). If `products.md` has a scope note, apply it.
-1b. **Fallback to web search when no sources are configured.** If `sources.md`
-   yields no usable URLs, do **not** stop. Automatically run a Google web search
-   scoped to the product name(s) plus intent terms
-   (`bug OR broken OR crash OR "feature request" OR review OR complaint`), and
-   treat the relevant top results as sources for the rest of the run. Apply the
-   *Search scope strategy* to keep hits on-scope and the *Reference validation
-   gate* to every discovered link. State clearly in the report that no sources
-   were configured and results came from an automatic web search. (This fallback
-   only triggers when the user provided nothing; if any source URLs exist, scan
-   exactly those.)
+1b. **Fallback to web search ONLY when zero sources are configured.** This
+   fallback is gated: it fires **if and only if** `sources.md` contains no URLs at
+   all. **If `sources.md` has one or more URLs, the Google fallback is forbidden**
+   — scan exactly those URLs with the browser (see step 4), and if one can't be
+   read, record it as a source failure rather than swapping in a web search. A
+   JS-heavy or login-walled configured source is *not* "no usable URLs"; it just
+   means you must open it in the browser. Only when the user genuinely provided
+   nothing: run a Google web search scoped to the product name(s) plus intent terms
+   (`bug OR broken OR crash OR "feature request" OR review OR complaint`), treat the
+   relevant top results as sources, apply the *Search scope strategy* and the
+   *Reference validation gate* to every discovered link, and state clearly in the
+   report that no sources were configured.
 2. **Load memory.** Read `memory/reported-bugs.md`. Build an in-memory index of
    existing issues (by title, type, and normalized content) for dedupe matching.
 3. **Set the run window.** Default: feedback from the last 30 days, or since the
@@ -177,7 +209,16 @@ Execute these steps in order. Do not skip the validation step (step 8).
    log in, then wait for their confirmation** before scanning (see
    *Authentication*). If already logged in (persistent profile), just proceed. If
    the user skips, record a graceful source failure; do not block the run.
-4. **Search each source, scoped to the product** (see *Search scope strategy*).
+4. **Open each source in the browser and search it, scoped to the product** (see
+   *Search scope strategy*). **Use the Playwright browser tools to load and read
+   every configured source** — `browser_navigate` to open it, `browser_snapshot`/
+   `browser_evaluate` to read the rendered content. `webfetch` may be tried first
+   only as a quick probe for plain static pages; the moment it returns an empty
+   shell, partial JS content, a login wall, or a CAPTCHA (the norm for
+   marketplaces, Reddit, X, forums), **switch to the browser — do not treat the
+   source as unreadable and do not fall back to Google search.** For a login-walled
+   source, run the *Interactive login flow* (step 3b / *Authentication*). Only
+   after the browser also genuinely fails do you record a graceful source failure.
    For each candidate, capture: source, exact URL, author, date, timestamp,
    verbatim quote, and a one-line summary. **While the browser is still open on a
    source that lacks per-item permalinks, capture a highlighted screenshot of the
@@ -222,12 +263,18 @@ sources. Otherwise, for each source URL, infer how to treat it:
   blank query (e.g. ends in `search?q=` or `q=&...`), fill in a scoped query
   built from the product name(s) plus intent terms
   (`bug OR broken OR crash OR "feature request" OR wish`).
-- **Fetch strategy.** Try `webfetch` first. If the page is JS-heavy or returns a
-  login/CAPTCHA/empty shell (common for X, Reddit, marketplaces), use the browser
-  tools. **If the page is behind a login wall, use the interactive login flow**
-  (open it, ask the user to log in, wait for confirmation — see *Authentication*
-  below), then retry. If it still can't be accessed, record it as a **source
-  failure** in the report and move on — never fabricate content to fill the gap.
+- **Fetch strategy (browser-first for anything dynamic).** `webfetch` is only a
+  quick probe for plain static pages. For X, Reddit, marketplaces, app stores,
+  forums, and issue trackers — assume they are JS-rendered and **go straight to the
+  browser tools** (`browser_navigate` + `browser_snapshot`/`browser_evaluate`). If
+  you did try `webfetch` and it returns a login/CAPTCHA/empty shell or partial
+  content, that is the signal to **escalate to the browser, not to skip the source
+  or fall back to Google search.** **If the page is behind a login wall, use the
+  interactive login flow** (open it, ask the user to log in, wait for confirmation
+  — see *Authentication* below), then retry in the browser. Only if the browser
+  *also* genuinely can't access it do you record it as a **source failure** in the
+  report and move on — never fabricate content, and never silently replace a
+  configured source with a Google web search.
 - **Deep links.** Build a link to the exact item, inferred from the platform:
   - Reddit → the comment permalink (`.../comment/<id>/`) + `u/author` + date.
   - X/Twitter → the specific status URL + `@handle` + timestamp.
@@ -327,8 +374,10 @@ written until this passes.**
 
 For **every** URL attached to **every** ticket:
 
-1. **Fetch/open it** with `webfetch` (or the browser tools for JS-heavy pages;
-   see *Source handling* for the fetch strategy).
+1. **Fetch/open it** — use the browser tools for any JS-heavy or social page (the
+   norm here); `webfetch` only for plain static pages. See *Source handling* for
+   the browser-first fetch strategy. An empty/walled `webfetch` result means open
+   it in the browser, not mark it unverifiable.
 2. **Confirm it loads** (HTTP 200 / renders, not 404/redirect-to-home/login
    wall).
 3. **Confirm the quoted text actually appears** on the page (or, for a specific
