@@ -5,10 +5,10 @@
     <key>Label</key>
     <string>com.user.sentiment-report</string>
 
-    <!-- Replace /absolute/path/to/opencode with the output of `which opencode` -->
+    <!-- Replace /absolute/path/to/antigravity with the output of `which antigravity` -->
     <key>ProgramArguments</key>
     <array>
-        <string>/absolute/path/to/opencode</string>
+        <string>/absolute/path/to/antigravity</string>
         <string>run</string>
         <string>Run the product sentiment report using the product-sentiment-skill skill. Follow its full run procedure and write both output artifacts.</string>
     </array>
