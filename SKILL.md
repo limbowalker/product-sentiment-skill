@@ -34,14 +34,87 @@ Non-negotiable rules:
   sources.** If `sources.md` contains any URL, the fallback is forbidden. A
   configured source that can't be read is a *source failure you report*, never a
   silent swap to Google search.
-- **If no browser tool is available in this environment, STOP and say so.** Do not
-  quietly substitute Google web search for the configured sources and present it as
-  a completed run. Report that the browser is unavailable and that configured
-  sources could not be scanned.
+- **If no browser tool is available, do NOT proceed to a Google fallback.** First
+  run the *Browser setup* section below to get the Playwright MCP server
+  configured. Only if setup can't be completed (e.g. non-interactive run, user
+  declines) do you STOP and say so — report that the browser is unavailable and
+  that configured sources could not be scanned. Never quietly substitute Google
+  web search for configured sources and present it as a completed run.
 
 If you find yourself about to "fall back to Google web search" while
 `sources.md` has URLs in it, you are doing the wrong thing — open the browser
 instead.
+
+## Browser setup (Playwright MCP) — provision the browser before running
+
+The browser tools this skill needs come from the **Playwright MCP server**
+(`@playwright/mcp`), which exposes `browser_navigate`, `browser_snapshot`,
+`browser_evaluate`, `browser_take_screenshot`, and friends. If those tools aren't
+present, the skill can't read its sources — so **provision them before the run**
+rather than failing.
+
+### Preflight: is a browser tool available?
+
+At the very start (step 0 of the *Run procedure*), check whether browser tools
+exist in this session:
+
+- If tools named `browser_navigate` / `browser_snapshot` (or an equivalent
+  Playwright browser toolset) are available → **skip the rest of this section and
+  run normally.**
+- If they are **not** available → do the *Guided setup* below before scanning any
+  source. Do not jump to the Google fallback; do not silently continue.
+
+### Guided setup (host-aware — don't blind-install)
+
+MCP servers are configured per host agent, so detect the host and give the user
+the exact, minimal step for their environment. **Ask before editing config files
+or installing anything**, then have the user reload so the tools register.
+
+The server itself is the same everywhere:
+
+- **Command:** `npx @playwright/mcp@latest`
+- Requires Node.js/`npx` on PATH. First launch downloads a browser; that's normal.
+- A **persistent profile** is the default — good, because it keeps X/Reddit logins
+  across runs (see *Authentication*).
+
+Config per common host (use the one that matches; if unsure, ask the user which
+agent they're in):
+
+- **OpenCode** — add to `opencode.json` (project) or `~/.config/opencode/opencode.json`:
+  ```json
+  {
+    "mcp": {
+      "playwright": {
+        "type": "local",
+        "command": ["npx", "@playwright/mcp@latest"],
+        "enabled": true
+      }
+    }
+  }
+  ```
+- **Claude Code** — run:
+  ```
+  claude mcp add playwright -- npx @playwright/mcp@latest
+  ```
+- **Google Antigravity** — open its MCP/extensions settings and add a server with
+  command `npx @playwright/mcp@latest` (or use the built-in browser: the user can
+  run `/browser` in chat to launch a browsing-capable environment). Point the user
+  to whichever their build supports.
+- **Cursor / Windsurf / other MCP hosts** — add an entry to that host's MCP config
+  (usually a `mcpServers` block) with command `npx @playwright/mcp@latest`.
+
+After adding it: **tell the user to reload/restart the agent (or re-open the MCP
+connection) so the `browser_*` tools appear**, then re-run the skill. Re-check the
+preflight; only once the tools are present do you proceed to scan sources.
+
+### When setup can't happen
+
+- **Non-interactive / headless runs** can't prompt for setup. If browser tools are
+  absent there, STOP gracefully: report that Playwright MCP isn't configured and
+  that configured sources couldn't be scanned. Do not fall back to Google search.
+- **User declines setup** → same graceful stop. Never fabricate results.
+- **Do this once.** Once Playwright MCP is configured for the host, future runs
+  pass the preflight automatically; don't re-prompt.
 
 ## Files this skill uses
 
@@ -182,7 +255,14 @@ Execute these steps in order. Do not skip the validation step (step 8).
 0. **First-run check.** Before anything else, run the *First-run setup* check
    above. If the preferences are unconfigured and the run is interactive, survey
    the user and write their answers before proceeding. If already configured, skip
-   straight to step 1.
+   straight to step 0b.
+0b. **Browser preflight.** Confirm the Playwright browser tools
+   (`browser_navigate`, `browser_snapshot`, …) are available. If they are not, run
+   the *Browser setup (Playwright MCP)* section: guide the user to configure the
+   Playwright MCP server for their host, have them reload, and re-check. Do not
+   start scanning sources — and do not fall back to Google search — until the
+   browser tools are present (or, if setup can't be completed, STOP gracefully as
+   described there).
 1. **Load preferences.** Read `preferences/products.md`, `preferences/sources.md`,
    `preferences/bug-template.md`. Extract the product name(s) and the source URLs
    from their bullet lists (ignore prose/tips; skip `NOTES-START`…`NOTES-END`

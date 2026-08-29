@@ -37,6 +37,26 @@ Install the agent skill from https://github.com/limbowalker/product-sentiment-sk
 into my agent's skills directory, following that repo's instructions.
 ```
 
+### 🌐 Browser is required (Playwright MCP)
+
+This skill reads JavaScript-rendered and login-walled pages (marketplaces,
+Reddit, X), so it needs real browser tools — the **Playwright MCP server**
+(`@playwright/mcp`). You don't have to set this up by hand: on the first run the
+skill runs a **browser preflight**, and if the tools are missing it walks you
+through configuring Playwright MCP for your specific agent, then continues once
+you reload.
+
+If you'd rather configure it up front, add the server (`npx @playwright/mcp@latest`)
+to your agent's MCP config, e.g.:
+
+- **OpenCode** — a `playwright` entry under `mcp` in `opencode.json`.
+- **Claude Code** — `claude mcp add playwright -- npx @playwright/mcp@latest`.
+- **Google Antigravity** — add it in the MCP/extensions settings, or run
+  `/browser` in chat to launch a browsing-capable environment.
+
+Requires Node.js/`npx` on your PATH. See the *Browser setup* section in
+`SKILL.md` for details.
+
 
 ## ⚙️ Configure
 
