@@ -9,17 +9,6 @@ social media and review sources you configure for 🐛 bugs, 💡 feature reques
 and 💬 complaints, then hands you prioritized, deduplicated, reference-validated
 tickets ready to bulk copy-paste into Buganizer or Jira.
 
-## 👀 See it in action
-
-The skill scans your configured sources and captures the exact reviews it finds —
-including a highlighted screenshot when there's no permalink:
-
-![The skill capturing a highlighted product review from a marketplace page](demo/1-skill-captures-web-reviews.png)
-
-Then it produces a prioritized report and copy-paste-ready bug tickets, each with
-verified sources, quotes, and repro steps:
-
-![The generated report summary and a bug ticket with sources and repro steps](demo/2-skill-generates-report-and-bug-tickets.png)
 
 ## ✨ What you get
 
@@ -103,3 +92,15 @@ Run the product sentiment report using the product-sentiment-skill skill.
 Want it running on autopilot? For macOS `launchd` or `cron`, see
 `scheduling/README.md`. Just edit the paths in the provided config to point at
 wherever you installed the skill (e.g. `~/path/to/product-sentiment-skill`).
+
+## 👀 See it in action
+
+The skill scans your configured sources and captures the exact reviews it finds —
+including a highlighted screenshot when there's no permalink:
+
+![The skill capturing a highlighted product review from a marketplace page](demo/1-skill-captures-web-reviews.png)
+
+Then it produces a prioritized report and copy-paste-ready bug tickets, each with
+verified sources, quotes, and repro steps:
+
+![The generated report summary and a bug ticket with sources and repro steps](demo/2-skill-generates-report-and-bug-tickets.png)
